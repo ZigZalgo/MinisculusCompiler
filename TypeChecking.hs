@@ -21,7 +21,7 @@ typeCheckDeclarations (decl:rest) table =
 typeCheckDeclaration:: M_decl -> ST -> Bool
 typeCheckDeclaration (M_var (name, _, vType)) table = 
     case lookup table name of
-        Left error -> False
+        Left errorMsg -> False
         Right (I_VARIALBE (level, offset, lType, dim)) -> lType == vType
 
 --If the declaration is a function, we first see if it exists in the lookup table
@@ -43,6 +43,13 @@ typeCheckDeclaration (M_fun (name, args, fType, decls, stmts)) =
             booleanList = (retTypeCheck : argTypeCheck : declsTypeCheck : stmtsTypeCheck : []) --List cons
             in (and booleanList) --Anding for result
 
+------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+---------------------ARGUMENT TYPE CHECKING-----------------------------------------
+------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+
+
 --Using the list of lookup args, and defined args, type checks by comparing them
 typeCheckArgs:: [(String, Int, M_type)] -> [(M_type, Int)] -> Bool
 typeCheckArgs [] [] = True
@@ -61,30 +68,110 @@ typeCheckArgs (_,_,fType) (lType, _) = (ftype == lType)
 ---------------------STATEMENT TYPE CHECKING----------------------------------------
 ------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------
-typeCheckStatements::[M_stmt] -> ST -> Bool
+typeCheckStatements::[M_stmt] -> Bool
 typeCheckStatements [] _ = True
-typeCheckStatements (statement:rest) table =
-    case typeCheckStatement statement table of
-        True -> typeCheckStatements rest table
+typeCheckStatements (statement:rest) =
+    case typeCheckStatement statement of
+        True -> typeCheckStatements rest
         False -> False
 
-typeCheckStatement:: M_stmt -> ST -> Bool
-typeCheckStatement (M_ass (name, size, expr))  table= typeCheckExpression expr table
-typeCheckStatement (M_while (expr, stmt)) table= let
-    exprChecked = typeCheckExpression expr table
-    stmtChecked = typeCheckStatement stmt table
+--Type checks individual statements
+typeCheckStatement:: M_stmt -> Bool
+--If the statement is an assignment, type check the expressions
+typeCheckStatement (M_ass (name, exprs, expr)) = let
+    exprChecked = typeCheckExpression expr
+    exprsChecked = typeCheckExpressions exprs
+    in and (exprChecked : exprsChecked : [])
+--If the statement is a while loop, type check the conditional, and the statements
+typeCheckStatement (M_while (expr, stmt)) = let
+    exprChecked = typeCheckExpression expr
+    stmtChecked = typeCheckStatement stmt
     in and (exprChecked:stmtChecked:[])
-typeCheckStatement (M_cond (expr, stmt1, stmt2)) table = let
-    exprChecked = typeCheckExpression expr table
-    st1Checked = typeCheckStatement stmt1 table
-    st2Checked = typeCheckStatement stmt2 table
+--If the statement is an if else, type check the conditional, and the statements
+typeCheckStatement (M_cond (expr, stmt1, stmt2)) = let
+    exprChecked = typeCheckExpression expr
+    st1Checked = typeCheckStatement stmt1
+    st2Checked = typeCheckStatement stmt2
     in and (exprChecked:st1Checked:st2Checked:[])
-typeCheckStatement (M_read (name, exprs)) table = typeCheckExpressions exprs table
-typeCheckStatement (M_print expr) table = typeCheckExpression expr table
-typeCheckStatement (M_return expr) table = typeCheckExpression expr table
-typeCheckStatement (M_block (decls, stmts)) table = let
-    declsChecked = typeCheckDeclarations decls table
-    stmtsChecked = typeCheckStatements stmts table
+--If the statement is a read, type check the expressions
+typeCheckStatement (M_read (name, exprs)) = typeCheckExpressions exprs
+--If the statement is a print, type check the expression
+typeCheckStatement (M_print expr) = typeCheckExpression expr
+--If the statement is a return call, type check the returned expression
+typeCheckStatement (M_return expr) = typeCheckExpression expr
+--If the statement is a block, recursively check the statements, and check the declarations
+typeCheckStatement (M_block (decls, stmts)) = let
+    declsChecked = typeCheckDeclarations decls
+    stmtsChecked = typeCheckStatements stmts
+    in and (declsChecked:stmtsChecked:[])
+
+------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+---------------------EXPRESSION TYPE CHECKING---------------------------------------
+------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+
+--Checking expressions done recursively
+typeCheckExpressions:: [M_expr] -> ST -> Bool
+typeCheckExpressions [] _ = True
+typeCheckExpressions (expr:rest) =
+        case typeCheckExpression expr of
+            True -> typeCheckExpressions rest
+            False -> False
+
+--Type checks individual expressions
+typeCheckExpression:: M_expr -> Bool
+typeCheckExpression (M_id (name, exprs)) = typeCheckExpressions exprs
+typeCheckExpression (M_app (opn, (expr:exprs)) = 
+        case checkListType (expr:rest) of --If all the expressions are the same constructor
+            False -> False
+            --Make sure this opn can be used on this type
+            True -> checkOPType opn expr
+typeCheckExpression _ = True
+
+--Compares a constructor with an Operation and checks whether that 
+--operation can be used on the constructor
+checkOPType:: M_operation -> M_expr -> Bool
+checkOPType M_add M_ival = True
+checkOPType M_add M_rval = True
+checkOPType M_mul M_ival = True
+checkOPType M_mul M_rval = True
+checkOpType M_sub M_ival = True
+checkOPType M_sub M_rval = True
+checkOPType M_div M_ival = True
+checkOPType M_div M_rval = True
+checkOPType M_neg M_ival = True
+checkOPType M_neg M_rval = True
+checkOpType M_lt M_ival = True
+checkOPType M_lt M_rval = True
+checkOPType M_le M_ival = True
+checkOPType M_le M_rval = True
+checkOpType M_gt M_ival = True
+checkOPType M_gt M_rval = True
+checkOPType M_ge M_ival = True
+checkOPType M_ge M_rval = True
+checkOPType M_eq _ = True
+checkOPType M_not M_bval = True
+checkOPType M_and M_bval = True
+checkOPType M_or M_bval = True
+checkOPType M_float M_rval = True
+checkOPType M_floor M_rval = True
+checkOPType M_ceil M_rval = True
+checkOPType _ _ = False
 
 
+--Takes a list of expressions, and makes sure they all share the same constructor
+checkListType::[M_expr] -> Bool
+checkListType [] = True
+checkListType struct1:[] = True
+checkListType struc1:struc2:rest = 
+    case (sameConstructor struct1 struc2) of
+        False -> False
+        True -> checkListType (struct2:rest)
 
+--Compares two expressions, and matches constructor type
+sameConstructor::M_expr -> M_expr -> Bool
+sameConstructor (M_ival _) (M_ival _) = True
+sameConstructor (M_rval _) (M_rval _) = True
+sameConstructor (M_bval _) (M_bval _) = True
+sameConstructor _ _ = False
