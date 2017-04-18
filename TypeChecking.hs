@@ -61,6 +61,30 @@ typeCheckArgs (_,_,fType) (lType, _) = (ftype == lType)
 ---------------------STATEMENT TYPE CHECKING----------------------------------------
 ------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------
+typeCheckStatements::[M_stmt] -> ST -> Bool
+typeCheckStatements [] _ = True
+typeCheckStatements (statement:rest) table =
+    case typeCheckStatement statement table of
+        True -> typeCheckStatements rest table
+        False -> False
+
+typeCheckStatement:: M_stmt -> ST -> Bool
+typeCheckStatement (M_ass (name, size, expr))  table= typeCheckExpression expr table
+typeCheckStatement (M_while (expr, stmt)) table= let
+    exprChecked = typeCheckExpression expr table
+    stmtChecked = typeCheckStatement stmt table
+    in and (exprChecked:stmtChecked:[])
+typeCheckStatement (M_cond (expr, stmt1, stmt2)) table = let
+    exprChecked = typeCheckExpression expr table
+    st1Checked = typeCheckStatement stmt1 table
+    st2Checked = typeCheckStatement stmt2 table
+    in and (exprChecked:st1Checked:st2Checked:[])
+typeCheckStatement (M_read (name, exprs)) table = typeCheckExpressions exprs table
+typeCheckStatement (M_print expr) table = typeCheckExpression expr table
+typeCheckStatement (M_return expr) table = typeCheckExpression expr table
+typeCheckStatement (M_block (decls, stmts)) table = let
+    declsChecked = typeCheckDeclarations decls table
+    stmtsChecked = typeCheckStatements stmts table
 
 
-typeCheckStatements
+
