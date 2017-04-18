@@ -1,0 +1,1311 @@
+TESTING PERSONAL 1: Function Body test
+M_Prog
+  ( [ M_fun
+        ( "MAX"
+        , [ ( "n" , 1 , M_real ) , ( "m" , 1 , M_real ) ]
+        , M_real
+        , [ M_var ( "ans" , [] , M_real ) ]
+        , [ M_cond
+              ( M_app
+                  ( M_le , [ M_app ( M_fn "n" , [] ) , M_app ( M_fn "m" , [] ) ] )
+              , M_ass ( "ans" , [] , M_app ( M_fn "m" , [] ) )
+              , M_ass ( "ans" , [] , M_app ( M_fn "n" , [] ) )
+              )
+          , M_return (M_app ( M_fn "ans" , [] ))
+          ]
+        )
+    ]
+  , []
+  )
+TESTING PERSONAL 2: Summation Function
+M_Prog
+  ( [ M_fun
+        ( "SUM"
+        , [ ( "a" , 1 , M_real ) ]
+        , M_real
+        , [ M_var ( "i" , [] , M_real ) , M_var ( "sum" , [] , M_real ) ]
+        , [ M_ass ( "sum" , [] , M_ival 0 )
+          , M_ass ( "i" , [] , M_ival 0 )
+          , M_while
+              ( M_app ( M_lt , [ M_app ( M_fn "i" , [] ) , M_size ( "a" , 0 ) ] )
+              , M_ass
+                  ( "sum"
+                  , []
+                  , M_app
+                      ( M_add
+                      , [ M_app ( M_fn "sum" , [] )
+                        , M_app ( M_fn "a" , [ M_app ( M_fn "i" , [] ) ] )
+                        ]
+                      )
+                  )
+              )
+          , M_ass
+              ( "i"
+              , []
+              , M_app ( M_add , [ M_app ( M_fn "i" , [] ) , M_ival 1 ] )
+              )
+          , M_return (M_app ( M_fn "sum" , [] ))
+          ]
+        )
+    ]
+  , [ M_print (M_app ( M_fn "SUM" , [ M_ival 3 ] )) ]
+  )
+TESTING PERSONAL 3: Parser Failure
+TESTING PERSONAL 4: Lexer Failure
+TESTING PERSONAL 5: Fibonacci Function
+M_Prog
+  ( [ M_fun
+        ( "FIB"
+        , [ ( "n" , 1 , M_real ) , ( "m" , 1 , M_real ) ]
+        , M_real
+        , [ M_var ( "ans" , [] , M_real )
+          , M_var ( "NONE" , [] , M_real )
+          , M_var ( "NTWO" , [] , M_real )
+          ]
+        , [ M_ass
+              ( "NONE"
+              , []
+              , M_app
+                  ( M_fn "FIB"
+                  , [ M_app ( M_sub , [ M_app ( M_fn "n" , [] ) , M_ival 1 ] ) ]
+                  )
+              )
+          , M_ass
+              ( "NTWO"
+              , []
+              , M_app
+                  ( M_fn "FIB"
+                  , [ M_app ( M_sub , [ M_app ( M_fn "n" , [] ) , M_ival 2 ] ) ]
+                  )
+              )
+          , M_ass
+              ( "ans"
+              , []
+              , M_app
+                  ( M_add
+                  , [ M_app ( M_fn "NONE" , [] ) , M_app ( M_fn "NTWO" , [] ) ]
+                  )
+              )
+          , M_return (M_app ( M_fn "ans" , [] ))
+          ]
+        )
+    ]
+  , [ M_print (M_app ( M_fn "FIB" , [ M_ival 5 ] )) ]
+  )
+TESTING TEST 1: 
+M_Prog
+  ( [ M_var ( "x" , [] , M_real )
+    , M_var ( "y" , [] , M_real )
+    , M_fun
+        ( "exp"
+        , [ ( "b" , 0 , M_real ) ]
+        , M_real
+        , [ M_var ( "z" , [] , M_real ) ]
+        , [ M_cond
+              ( M_app ( M_eq , [ M_app ( M_fn "b" , [] ) , M_ival 0 ] )
+              , M_ass ( "z" , [] , M_ival 1 )
+              , M_ass
+                  ( "z"
+                  , []
+                  , M_app
+                      ( M_mul
+                      , [ M_app ( M_fn "x" , [] )
+                        , M_app
+                            ( M_fn "exp"
+                            , [ M_app ( M_sub , [ M_app ( M_fn "b" , [] ) , M_ival 1 ] ) ]
+                            )
+                        ]
+                      )
+                  )
+              )
+          , M_return (M_app ( M_fn "z" , [] ))
+          ]
+        )
+    ]
+  , [ M_read ( "x" , [] )
+    , M_read ( "y" , [] )
+    , M_print (M_app ( M_fn "exp" , [ M_app ( M_fn "y" , [] ) ] ))
+    ]
+  )
+TESTING TEST 2: 
+TESTING TEST 3: 
+M_Prog
+  ( [ M_var ( "x" , [ M_ival 2 ] , M_real ) ]
+  , [ M_ass
+        ( "x"
+        , [ M_ival 1 ]
+        , M_app
+            ( M_add
+            , [ M_app ( M_fn "x" , [ M_rval 2.0 ] )
+              , M_app ( M_fn "x" , [ M_ival 1 ] )
+              ]
+            )
+        )
+    ]
+  )
+TESTING TEST 4: 
+M_Prog
+  ( [ M_var ( "x" , [ M_ival 2 ] , M_real ) ]
+  , [ M_ass
+        ( "x"
+        , [ M_ival 1 ]
+        , M_app
+            ( M_add
+            , [ M_app ( M_fn "x" , [ M_rval 2.0 ] )
+              , M_app ( M_fn "x" , [ M_ival 1 ] )
+              ]
+            )
+        )
+    ]
+  )
+TESTING TEST 5: 
+M_Prog
+  ( [ M_var ( "x" , [ M_ival 2 ] , M_real ) ]
+  , [ M_ass ( "x" , [ M_ival 0 ] , M_ival 10 )
+    , M_ass ( "x" , [ M_ival 1 ] , M_ival 15 )
+    , M_ass
+        ( "x"
+        , [ M_ival 0 ]
+        , M_app
+            ( M_add
+            , [ M_app ( M_fn "x" , [ M_ival 1 ] )
+              , M_app ( M_fn "x" , [ M_ival 0 ] )
+              ]
+            )
+        )
+    , M_print (M_app ( M_fn "x" , [ M_ival 0 ] ))
+    , M_print (M_app ( M_fn "x" , [ M_ival 1 ] ))
+    ]
+  )
+TESTING TEST 6: 
+M_Prog
+  ( [ M_var ( "x" , [ M_ival 2 , M_ival 2 ] , M_real ) ]
+  , [ M_ass ( "x" , [ M_ival 0 , M_ival 0 ] , M_ival 10 )
+    , M_ass ( "x" , [ M_ival 0 , M_ival 1 ] , M_ival 15 )
+    , M_ass ( "x" , [ M_ival 1 , M_ival 0 ] , M_ival 20 )
+    , M_ass ( "x" , [ M_ival 1 , M_ival 1 ] , M_ival 25 )
+    , M_ass
+        ( "x"
+        , [ M_ival 0 , M_ival 0 ]
+        , M_app
+            ( M_add
+            , [ M_app ( M_fn "x" , [ M_ival 0 , M_ival 1 ] )
+              , M_app ( M_fn "x" , [ M_ival 0 , M_ival 0 ] )
+              ]
+            )
+        )
+    , M_ass
+        ( "x"
+        , [ M_ival 1 , M_ival 0 ]
+        , M_app
+            ( M_add
+            , [ M_app ( M_fn "x" , [ M_ival 1 , M_ival 1 ] )
+              , M_app ( M_fn "x" , [ M_ival 1 , M_ival 0 ] )
+              ]
+            )
+        )
+    , M_print (M_app ( M_fn "x" , [ M_ival 0 , M_ival 0 ] ))
+    , M_print (M_app ( M_fn "x" , [ M_ival 1 , M_ival 0 ] ))
+    ]
+  )
+TESTING TEST 7: 
+M_Prog
+  ( [ M_var ( "x" , [ M_ival 2 , M_ival 2 , M_ival 2 ] , M_real ) ]
+  , [ M_ass ( "x" , [ M_ival 0 , M_ival 0 , M_ival 0 ] , M_rval 1.2 )
+    , M_ass ( "x" , [ M_ival 0 , M_ival 0 , M_ival 1 ] , M_rval 1.5 )
+    , M_ass ( "x" , [ M_ival 0 , M_ival 1 , M_ival 0 ] , M_rval 2.0 )
+    , M_ass ( "x" , [ M_ival 0 , M_ival 1 , M_ival 1 ] , M_rval 2.5 )
+    , M_ass ( "x" , [ M_ival 1 , M_ival 0 , M_ival 0 ] , M_rval 10.2 )
+    , M_ass ( "x" , [ M_ival 1 , M_ival 0 , M_ival 1 ] , M_rval 10.5 )
+    , M_ass ( "x" , [ M_ival 1 , M_ival 1 , M_ival 0 ] , M_rval 20.0 )
+    , M_ass ( "x" , [ M_ival 1 , M_ival 1 , M_ival 1 ] , M_rval 20.5 )
+    , M_ass
+        ( "x"
+        , [ M_ival 0 , M_ival 0 , M_ival 0 ]
+        , M_app
+            ( M_add
+            , [ M_app ( M_fn "x" , [ M_ival 0 , M_ival 0 , M_ival 1 ] )
+              , M_app ( M_fn "x" , [ M_ival 0 , M_ival 0 , M_ival 0 ] )
+              ]
+            )
+        )
+    , M_ass
+        ( "x"
+        , [ M_ival 0 , M_ival 1 , M_ival 0 ]
+        , M_app
+            ( M_add
+            , [ M_app ( M_fn "x" , [ M_ival 0 , M_ival 1 , M_ival 1 ] )
+              , M_app ( M_fn "x" , [ M_ival 0 , M_ival 1 , M_ival 0 ] )
+              ]
+            )
+        )
+    , M_ass
+        ( "x"
+        , [ M_ival 1 , M_ival 0 , M_ival 0 ]
+        , M_app
+            ( M_add
+            , [ M_app ( M_fn "x" , [ M_ival 1 , M_ival 0 , M_ival 1 ] )
+              , M_app ( M_fn "x" , [ M_ival 1 , M_ival 0 , M_ival 0 ] )
+              ]
+            )
+        )
+    , M_ass
+        ( "x"
+        , [ M_ival 1 , M_ival 1 , M_ival 0 ]
+        , M_app
+            ( M_add
+            , [ M_app ( M_fn "x" , [ M_ival 1 , M_ival 1 , M_ival 1 ] )
+              , M_app ( M_fn "x" , [ M_ival 1 , M_ival 1 , M_ival 0 ] )
+              ]
+            )
+        )
+    , M_print (M_app ( M_fn "x" , [ M_ival 0 , M_ival 0 , M_ival 0 ] ))
+    , M_print (M_app ( M_fn "x" , [ M_ival 0 , M_ival 1 , M_ival 0 ] ))
+    , M_print (M_app ( M_fn "x" , [ M_ival 1 , M_ival 0 , M_ival 0 ] ))
+    , M_print (M_app ( M_fn "x" , [ M_ival 1 , M_ival 1 , M_ival 0 ] ))
+    ]
+  )
+TESTING TEST 8: 
+M_Prog
+  ( [ M_var ( "x" , [ M_ival 6 , M_ival 3 ] , M_real ) ]
+  , [ M_print (M_size ( "x" , 1 )) , M_print (M_size ( "x" , 2 )) ]
+  )
+TESTING TEST 9: 
+M_Prog
+  ( [ M_var ( "x" , [ M_ival 2 , M_ival 2 ] , M_real )
+    , M_var ( "y" , [ M_ival 1 , M_ival 1 ] , M_real )
+    , M_fun
+        ( "compare_matrix"
+        , [ ( "a" , 2 , M_real ) , ( "b" , 2 , M_real ) ]
+        , M_bool
+        , [ M_var ( "v" , [] , M_bool ) ]
+        , [ M_cond
+              ( M_app
+                  ( M_and
+                  , [ M_app ( M_eq , [ M_size ( "a" , 0 ) , M_size ( "b" , 0 ) ] )
+                    , M_app ( M_eq , [ M_size ( "a" , 1 ) , M_size ( "b" , 1 ) ] )
+                    ]
+                  )
+              , M_ass ( "v" , [] , M_bval True )
+              , M_ass ( "v" , [] , M_bval False )
+              )
+          , M_return (M_app ( M_fn "v" , [] ))
+          ]
+        )
+    ]
+  , [ M_ass ( "x" , [ M_ival 0 , M_ival 0 ] , M_rval 1.2 )
+    , M_ass ( "x" , [ M_ival 0 , M_ival 1 ] , M_rval 1.5 )
+    , M_ass ( "x" , [ M_ival 1 , M_ival 0 ] , M_rval 2.0 )
+    , M_ass ( "x" , [ M_ival 1 , M_ival 1 ] , M_rval 2.5 )
+    , M_ass ( "y" , [ M_ival 0 , M_ival 0 ] , M_rval 6.0 )
+    , M_cond
+        ( M_app
+            ( M_fn "compare_matrix"
+            , [ M_app ( M_fn "x" , [] ) , M_app ( M_fn "x" , [] ) ]
+            )
+        , M_block
+            ( []
+            , [ M_print (M_app ( M_fn "x" , [ M_ival 0 , M_ival 0 ] ))
+              , M_print (M_app ( M_fn "x" , [ M_ival 0 , M_ival 1 ] ))
+              , M_print (M_app ( M_fn "x" , [ M_ival 1 , M_ival 0 ] ))
+              , M_print (M_app ( M_fn "x" , [ M_ival 1 , M_ival 1 ] ))
+              ]
+            )
+        , M_print (M_bval False)
+        )
+    , M_cond
+        ( M_app
+            ( M_fn "compare_matrix"
+            , [ M_app ( M_fn "x" , [] ) , M_app ( M_fn "y" , [] ) ]
+            )
+        , M_print (M_app ( M_fn "y" , [ M_ival 0 , M_ival 0 ] ))
+        , M_print (M_bval False)
+        )
+    ]
+  )
+TESTING TEST 10: 
+M_Prog
+  ( [ M_var ( "x" , [ M_ival 6 , M_ival 3 ] , M_real ) ]
+  , [ M_print (M_size ( "x" , 0 )) , M_print (M_size ( "x" , 1 )) ]
+  )
+TESTING TEST 11: 
+M_Prog
+  ( [ M_var ( "x" , [ M_ival 6 , M_ival 3 ] , M_real )
+    , M_fun
+        ( "a"
+        , []
+        , M_real
+        , []
+        , [ M_return
+              (M_app ( M_mul , [ M_size ( "x" , 0 ) , M_size ( "x" , 1 ) ] ))
+          ]
+        )
+    ]
+  , [ M_print (M_app ( M_fn "a" , [] )) ]
+  )
+TESTING TEST 12: 
+M_Prog
+  ( [ M_var ( "n" , [] , M_real ) ]
+  , [ M_read ( "n" , [] )
+    , M_block
+        ( [ M_var ( "a" , [ M_app ( M_fn "n" , [] ) ] , M_real ) ]
+        , [ M_ass ( "n" , [] , M_ival 0 )
+          , M_while
+              ( M_app ( M_lt , [ M_app ( M_fn "n" , [] ) , M_size ( "a" , 0 ) ] )
+              , M_block
+                  ( []
+                  , [ M_read ( "a" , [ M_app ( M_fn "n" , [] ) ] )
+                    , M_ass
+                        ( "n"
+                        , []
+                        , M_app ( M_add , [ M_app ( M_fn "n" , [] ) , M_ival 1 ] )
+                        )
+                    ]
+                  )
+              )
+          , M_ass ( "n" , [] , M_ival 0 )
+          , M_while
+              ( M_app ( M_lt , [ M_app ( M_fn "n" , [] ) , M_size ( "a" , 0 ) ] )
+              , M_block
+                  ( []
+                  , [ M_print (M_app ( M_fn "a" , [ M_app ( M_fn "n" , [] ) ] ))
+                    , M_ass
+                        ( "n"
+                        , []
+                        , M_app ( M_add , [ M_app ( M_fn "n" , [] ) , M_ival 1 ] )
+                        )
+                    ]
+                  )
+              )
+          ]
+        )
+    ]
+  )
+TESTING TEST 13: 
+M_Prog
+  ( [ M_var ( "n" , [] , M_real ) ]
+  , [ M_read ( "n" , [] )
+    , M_block
+        ( [ M_var ( "a" , [ M_app ( M_fn "n" , [] ) ] , M_real )
+          , M_var ( "av" , [] , M_real )
+          ]
+        , [ M_ass ( "n" , [] , M_ival 0 )
+          , M_while
+              ( M_app ( M_lt , [ M_app ( M_fn "n" , [] ) , M_size ( "a" , 0 ) ] )
+              , M_block
+                  ( []
+                  , [ M_read ( "a" , [ M_app ( M_fn "n" , [] ) ] )
+                    , M_ass
+                        ( "n"
+                        , []
+                        , M_app ( M_add , [ M_app ( M_fn "n" , [] ) , M_ival 1 ] )
+                        )
+                    ]
+                  )
+              )
+          , M_ass ( "n" , [] , M_ival 0 )
+          , M_ass ( "av" , [] , M_rval 0.0 )
+          , M_while
+              ( M_app ( M_lt , [ M_app ( M_fn "n" , [] ) , M_size ( "a" , 0 ) ] )
+              , M_block
+                  ( []
+                  , [ M_ass
+                        ( "av"
+                        , []
+                        , M_app
+                            ( M_add
+                            , [ M_app ( M_fn "av" , [] )
+                              , M_app ( M_fn "a" , [ M_app ( M_fn "n" , [] ) ] )
+                              ]
+                            )
+                        )
+                    , M_ass
+                        ( "n"
+                        , []
+                        , M_app ( M_add , [ M_app ( M_fn "n" , [] ) , M_ival 1 ] )
+                        )
+                    ]
+                  )
+              )
+          , M_ass
+              ( "av"
+              , []
+              , M_app
+                  ( M_div
+                  , [ M_app ( M_fn "av" , [] )
+                    , M_app ( M_float , [ M_size ( "a" , 0 ) ] )
+                    ]
+                  )
+              )
+          , M_print (M_app ( M_fn "av" , [] ))
+          ]
+        )
+    ]
+  )
+TESTING TEST 14: 
+M_Prog
+  ( [ M_var ( "x" , [ M_ival 2 , M_ival 2 ] , M_real )
+    , M_fun
+        ( "add_matrix"
+        , [ ( "a" , 2 , M_real ) , ( "b" , 2 , M_real ) ]
+        , M_bool
+        , [ M_var ( "n" , [] , M_real )
+          , M_var ( "m" , [] , M_real )
+          , M_var ( "v" , [] , M_bool )
+          ]
+        , [ M_cond
+              ( M_app
+                  ( M_and
+                  , [ M_app ( M_eq , [ M_size ( "a" , 0 ) , M_size ( "b" , 0 ) ] )
+                    , M_app ( M_eq , [ M_size ( "a" , 1 ) , M_size ( "b" , 1 ) ] )
+                    ]
+                  )
+              , M_block
+                  ( []
+                  , [ M_ass ( "n" , [] , M_ival 0 )
+                    , M_while
+                        ( M_app ( M_lt , [ M_app ( M_fn "n" , [] ) , M_size ( "a" , 0 ) ] )
+                        , M_block
+                            ( []
+                            , [ M_ass ( "m" , [] , M_ival 0 )
+                              , M_while
+                                  ( M_app
+                                      ( M_lt , [ M_app ( M_fn "m" , [] ) , M_size ( "a" , 1 ) ] )
+                                  , M_block
+                                      ( []
+                                      , [ M_ass
+                                            ( "a"
+                                            , [ M_app ( M_fn "n" , [] ) , M_app ( M_fn "m" , [] ) ]
+                                            , M_app
+                                                ( M_add
+                                                , [ M_app
+                                                      ( M_fn "b"
+                                                      , [ M_app ( M_fn "n" , [] )
+                                                        , M_app ( M_fn "m" , [] )
+                                                        ]
+                                                      )
+                                                  , M_app
+                                                      ( M_fn "a"
+                                                      , [ M_app ( M_fn "n" , [] )
+                                                        , M_app ( M_fn "m" , [] )
+                                                        ]
+                                                      )
+                                                  ]
+                                                )
+                                            )
+                                        , M_ass
+                                            ( "m"
+                                            , []
+                                            , M_app
+                                                ( M_add , [ M_app ( M_fn "m" , [] ) , M_ival 1 ] )
+                                            )
+                                        ]
+                                      )
+                                  )
+                              , M_ass
+                                  ( "n"
+                                  , []
+                                  , M_app ( M_add , [ M_app ( M_fn "n" , [] ) , M_ival 1 ] )
+                                  )
+                              ]
+                            )
+                        )
+                    , M_ass ( "v" , [] , M_bval True )
+                    ]
+                  )
+              , M_ass ( "v" , [] , M_bval False )
+              )
+          , M_return (M_app ( M_fn "v" , [] ))
+          ]
+        )
+    ]
+  , [ M_ass ( "x" , [ M_ival 0 , M_ival 0 ] , M_rval 1.2 )
+    , M_ass ( "x" , [ M_ival 0 , M_ival 1 ] , M_rval 1.5 )
+    , M_ass ( "x" , [ M_ival 1 , M_ival 0 ] , M_rval 2.0 )
+    , M_ass ( "x" , [ M_ival 1 , M_ival 1 ] , M_rval 2.5 )
+    , M_cond
+        ( M_app
+            ( M_fn "add_matrix"
+            , [ M_app ( M_fn "x" , [] ) , M_app ( M_fn "x" , [] ) ]
+            )
+        , M_block
+            ( []
+            , [ M_print (M_app ( M_fn "x" , [ M_ival 0 , M_ival 0 ] ))
+              , M_print (M_app ( M_fn "x" , [ M_ival 0 , M_ival 1 ] ))
+              , M_print (M_app ( M_fn "x" , [ M_ival 1 , M_ival 0 ] ))
+              , M_print (M_app ( M_fn "x" , [ M_ival 1 , M_ival 1 ] ))
+              ]
+            )
+        , M_print (M_ival 0)
+        )
+    ]
+  )
+TESTING TEST 15: 
+M_Prog
+  ( [ M_var ( "x" , [] , M_bool ) ]
+  , [ M_print (M_size ( "x" , 0 )) ]
+  )
+TESTING TEST 16: 
+M_Prog
+  ( [ M_var ( "x" , [ M_ival 6 , M_ival 3 ] , M_real )
+    , M_fun
+        ( "a"
+        , []
+        , M_real
+        , []
+        , [ M_return
+              (M_app ( M_mul , [ M_size ( "x" , 0 ) , M_size ( "x" , 1 ) ] ))
+          ]
+        )
+    ]
+  , [ M_print (M_app ( M_fn "a" , [] )) ]
+  )
+TESTING TEST 17: 
+M_Prog
+  ( [ M_var ( "n" , [] , M_real )
+    , M_fun
+        ( "merge"
+        , [ ( "b" , 1 , M_real )
+          , ( "n" , 0 , M_real )
+          , ( "mid" , 0 , M_real )
+          , ( "m" , 0 , M_real )
+          ]
+        , M_bool
+        , []
+        , [ M_cond
+              ( M_app
+                  ( M_lt , [ M_app ( M_fn "n" , [] ) , M_app ( M_fn "m" , [] ) ] )
+              , M_block
+                  ( [ M_var
+                        ( "c"
+                        , [ M_app
+                              ( M_add
+                              , [ M_app
+                                    ( M_sub
+                                    , [ M_app ( M_fn "m" , [] ) , M_app ( M_fn "n" , [] ) ]
+                                    )
+                                , M_ival 1
+                                ]
+                              )
+                          ]
+                        , M_real
+                        )
+                    , M_var ( "i" , [] , M_real )
+                    , M_var ( "j" , [] , M_real )
+                    , M_var ( "k" , [] , M_real )
+                    ]
+                  , [ M_ass ( "i" , [] , M_app ( M_fn "n" , [] ) )
+                    , M_ass ( "j" , [] , M_app ( M_fn "mid" , [] ) )
+                    , M_ass ( "k" , [] , M_ival 0 )
+                    , M_while
+                        ( M_app
+                            ( M_and
+                            , [ M_app
+                                  ( M_lt , [ M_app ( M_fn "i" , [] ) , M_app ( M_fn "mid" , [] ) ] )
+                              , M_app
+                                  ( M_le , [ M_app ( M_fn "j" , [] ) , M_app ( M_fn "m" , [] ) ] )
+                              ]
+                            )
+                        , M_block
+                            ( []
+                            , [ M_cond
+                                  ( M_app
+                                      ( M_lt
+                                      , [ M_app ( M_fn "b" , [ M_app ( M_fn "i" , [] ) ] )
+                                        , M_app ( M_fn "b" , [ M_app ( M_fn "j" , [] ) ] )
+                                        ]
+                                      )
+                                  , M_block
+                                      ( []
+                                      , [ M_ass
+                                            ( "c"
+                                            , [ M_app ( M_fn "k" , [] ) ]
+                                            , M_app ( M_fn "b" , [ M_app ( M_fn "i" , [] ) ] )
+                                            )
+                                        , M_ass
+                                            ( "i"
+                                            , []
+                                            , M_app
+                                                ( M_add , [ M_app ( M_fn "i" , [] ) , M_ival 1 ] )
+                                            )
+                                        , M_ass
+                                            ( "k"
+                                            , []
+                                            , M_app
+                                                ( M_add , [ M_app ( M_fn "k" , [] ) , M_ival 1 ] )
+                                            )
+                                        ]
+                                      )
+                                  , M_block
+                                      ( []
+                                      , [ M_ass
+                                            ( "c"
+                                            , [ M_app ( M_fn "k" , [] ) ]
+                                            , M_app ( M_fn "b" , [ M_app ( M_fn "j" , [] ) ] )
+                                            )
+                                        , M_ass
+                                            ( "j"
+                                            , []
+                                            , M_app
+                                                ( M_add , [ M_app ( M_fn "j" , [] ) , M_ival 1 ] )
+                                            )
+                                        , M_ass
+                                            ( "k"
+                                            , []
+                                            , M_app
+                                                ( M_add , [ M_app ( M_fn "k" , [] ) , M_ival 1 ] )
+                                            )
+                                        ]
+                                      )
+                                  )
+                              ]
+                            )
+                        )
+                    , M_while
+                        ( M_app
+                            ( M_lt , [ M_app ( M_fn "i" , [] ) , M_app ( M_fn "mid" , [] ) ] )
+                        , M_block
+                            ( []
+                            , [ M_ass
+                                  ( "c"
+                                  , [ M_app ( M_fn "k" , [] ) ]
+                                  , M_app ( M_fn "b" , [ M_app ( M_fn "i" , [] ) ] )
+                                  )
+                              , M_ass
+                                  ( "k"
+                                  , []
+                                  , M_app ( M_add , [ M_app ( M_fn "k" , [] ) , M_ival 1 ] )
+                                  )
+                              , M_ass
+                                  ( "i"
+                                  , []
+                                  , M_app ( M_add , [ M_app ( M_fn "i" , [] ) , M_ival 1 ] )
+                                  )
+                              ]
+                            )
+                        )
+                    , M_while
+                        ( M_app
+                            ( M_le , [ M_app ( M_fn "j" , [] ) , M_app ( M_fn "m" , [] ) ] )
+                        , M_block
+                            ( []
+                            , [ M_ass
+                                  ( "c"
+                                  , [ M_app ( M_fn "k" , [] ) ]
+                                  , M_app ( M_fn "b" , [ M_app ( M_fn "j" , [] ) ] )
+                                  )
+                              , M_ass
+                                  ( "k"
+                                  , []
+                                  , M_app ( M_add , [ M_app ( M_fn "k" , [] ) , M_ival 1 ] )
+                                  )
+                              , M_ass
+                                  ( "j"
+                                  , []
+                                  , M_app ( M_add , [ M_app ( M_fn "j" , [] ) , M_ival 1 ] )
+                                  )
+                              ]
+                            )
+                        )
+                    , M_ass ( "k" , [] , M_ival 0 )
+                    , M_while
+                        ( M_app
+                            ( M_le
+                            , [ M_app
+                                  ( M_add , [ M_app ( M_fn "k" , [] ) , M_app ( M_fn "n" , [] ) ] )
+                              , M_app ( M_fn "m" , [] )
+                              ]
+                            )
+                        , M_block
+                            ( []
+                            , [ M_ass
+                                  ( "b"
+                                  , [ M_app
+                                        ( M_add
+                                        , [ M_app ( M_fn "n" , [] ) , M_app ( M_fn "k" , [] ) ]
+                                        )
+                                    ]
+                                  , M_app ( M_fn "c" , [ M_app ( M_fn "k" , [] ) ] )
+                                  )
+                              , M_ass
+                                  ( "k"
+                                  , []
+                                  , M_app ( M_add , [ M_app ( M_fn "k" , [] ) , M_ival 1 ] )
+                                  )
+                              ]
+                            )
+                        )
+                    ]
+                  )
+              , M_block ( [] , [] )
+              )
+          , M_return (M_bval True)
+          ]
+        )
+    , M_fun
+        ( "sort"
+        , [ ( "b" , 1 , M_real )
+          , ( "n" , 0 , M_real )
+          , ( "m" , 0 , M_real )
+          ]
+        , M_bool
+        , [ M_var ( "v" , [] , M_bool ) ]
+        , [ M_cond
+              ( M_app
+                  ( M_lt
+                  , [ M_app
+                        ( M_sub , [ M_app ( M_fn "m" , [] ) , M_app ( M_fn "n" , [] ) ] )
+                    , M_ival 0
+                    ]
+                  )
+              , M_ass ( "v" , [] , M_bval False )
+              , M_cond
+                  ( M_app
+                      ( M_eq , [ M_app ( M_fn "n" , [] ) , M_app ( M_fn "m" , [] ) ] )
+                  , M_ass ( "v" , [] , M_bval True )
+                  , M_cond
+                      ( M_app
+                          ( M_eq
+                          , [ M_app
+                                ( M_sub , [ M_app ( M_fn "m" , [] ) , M_app ( M_fn "n" , [] ) ] )
+                            , M_ival 1
+                            ]
+                          )
+                      , M_block
+                          ( [ M_var ( "temp" , [] , M_real ) ]
+                          , [ M_cond
+                                ( M_app
+                                    ( M_gt
+                                    , [ M_app ( M_fn "b" , [ M_app ( M_fn "n" , [] ) ] )
+                                      , M_app ( M_fn "b" , [ M_app ( M_fn "m" , [] ) ] )
+                                      ]
+                                    )
+                                , M_block
+                                    ( []
+                                    , [ M_ass
+                                          ( "temp"
+                                          , []
+                                          , M_app ( M_fn "b" , [ M_app ( M_fn "n" , [] ) ] )
+                                          )
+                                      , M_ass
+                                          ( "b"
+                                          , [ M_app ( M_fn "n" , [] ) ]
+                                          , M_app ( M_fn "b" , [ M_app ( M_fn "m" , [] ) ] )
+                                          )
+                                      , M_ass
+                                          ( "b"
+                                          , [ M_app ( M_fn "m" , [] ) ]
+                                          , M_app ( M_fn "temp" , [] )
+                                          )
+                                      , M_ass ( "v" , [] , M_bval True )
+                                      ]
+                                    )
+                                , M_ass ( "v" , [] , M_bval True )
+                                )
+                            ]
+                          )
+                      , M_block
+                          ( [ M_var ( "mid" , [] , M_real ) ]
+                          , [ M_ass
+                                ( "mid"
+                                , []
+                                , M_app
+                                    ( M_add
+                                    , [ M_app ( M_fn "n" , [] )
+                                      , M_app
+                                          ( M_div
+                                          , [ M_app
+                                                ( M_sub
+                                                , [ M_app ( M_fn "m" , [] )
+                                                  , M_app ( M_fn "n" , [] )
+                                                  ]
+                                                )
+                                            , M_ival 2
+                                            ]
+                                          )
+                                      ]
+                                    )
+                                )
+                            , M_print (M_app ( M_fn "mid" , [] ))
+                            , M_ass
+                                ( "v"
+                                , []
+                                , M_app
+                                    ( M_and
+                                    , [ M_app
+                                          ( M_and
+                                          , [ M_app
+                                                ( M_fn "sort"
+                                                , [ M_app ( M_fn "b" , [] )
+                                                  , M_app ( M_fn "n" , [] )
+                                                  , M_app ( M_fn "mid" , [] )
+                                                  ]
+                                                )
+                                            , M_app
+                                                ( M_fn "sort"
+                                                , [ M_app ( M_fn "b" , [] )
+                                                  , M_app
+                                                      ( M_add
+                                                      , [ M_app ( M_fn "mid" , [] ) , M_ival 1 ]
+                                                      )
+                                                  , M_app ( M_fn "m" , [] )
+                                                  ]
+                                                )
+                                            ]
+                                          )
+                                      , M_app
+                                          ( M_fn "merge"
+                                          , [ M_app ( M_fn "b" , [] )
+                                            , M_app ( M_fn "n" , [] )
+                                            , M_app
+                                                ( M_add , [ M_app ( M_fn "mid" , [] ) , M_ival 1 ] )
+                                            , M_app ( M_fn "m" , [] )
+                                            ]
+                                          )
+                                      ]
+                                    )
+                                )
+                            ]
+                          )
+                      )
+                  )
+              )
+          , M_return (M_app ( M_fn "v" , [] ))
+          ]
+        )
+    ]
+  , [ M_read ( "n" , [] )
+    , M_block
+        ( [ M_var ( "a" , [ M_app ( M_fn "n" , [] ) ] , M_real ) ]
+        , [ M_ass ( "n" , [] , M_ival 0 )
+          , M_while
+              ( M_app ( M_lt , [ M_app ( M_fn "n" , [] ) , M_size ( "a" , 0 ) ] )
+              , M_block
+                  ( []
+                  , [ M_read ( "a" , [ M_app ( M_fn "n" , [] ) ] )
+                    , M_ass
+                        ( "n"
+                        , []
+                        , M_app ( M_add , [ M_app ( M_fn "n" , [] ) , M_ival 1 ] )
+                        )
+                    ]
+                  )
+              )
+          , M_cond
+              ( M_app
+                  ( M_fn "sort"
+                  , [ M_app ( M_fn "a" , [] )
+                    , M_ival 0
+                    , M_app ( M_sub , [ M_size ( "a" , 0 ) , M_ival 1 ] )
+                    ]
+                  )
+              , M_block
+                  ( []
+                  , [ M_ass ( "n" , [] , M_ival 0 )
+                    , M_while
+                        ( M_app ( M_lt , [ M_app ( M_fn "n" , [] ) , M_size ( "a" , 0 ) ] )
+                        , M_block
+                            ( []
+                            , [ M_print (M_app ( M_fn "a" , [ M_app ( M_fn "n" , [] ) ] ))
+                              , M_ass
+                                  ( "n"
+                                  , []
+                                  , M_app ( M_add , [ M_app ( M_fn "n" , [] ) , M_ival 1 ] )
+                                  )
+                              ]
+                            )
+                        )
+                    ]
+                  )
+              , M_print (M_ival 0)
+              )
+          ]
+        )
+    ]
+  )
+TESTING TEST 18: 
+M_Prog
+  ( [ M_var ( "a" , [ M_ival 2 ] , M_real )
+    , M_fun
+        ( "b"
+        , []
+        , M_bool
+        , [ M_fun
+              ( "c"
+              , []
+              , M_bool
+              , []
+              , [ M_return
+                    (M_app
+                       ( M_eq
+                       , [ M_app ( M_fn "a" , [ M_ival 1 ] )
+                         , M_app ( M_fn "a" , [ M_ival 0 ] )
+                         ]
+                       ))
+                ]
+              )
+          , M_var ( "v" , [] , M_bool )
+          ]
+        , [ M_block
+              ( []
+              , [ M_ass ( "v" , [] , M_bval False )
+                , M_ass ( "v" , [] , M_app ( M_fn "c" , [] ) )
+                ]
+              )
+          , M_return (M_app ( M_fn "v" , [] ))
+          ]
+        )
+    ]
+  , [ M_ass ( "a" , [ M_ival 0 ] , M_ival 1 )
+    , M_ass ( "a" , [ M_ival 1 ] , M_ival 1 )
+    , M_print (M_app ( M_fn "b" , [] ))
+    ]
+  )
+TESTING TEST 19: 
+M_Prog
+  ( [ M_fun
+        ( "mult_matrix"
+        , [ ( "a" , 2 , M_real )
+          , ( "b" , 2 , M_real )
+          , ( "c" , 2 , M_real )
+          ]
+        , M_bool
+        , [ M_var
+              ( "ab" , [ M_size ( "a" , 0 ) , M_size ( "b" , 1 ) ] , M_real )
+          , M_var ( "n" , [] , M_real )
+          , M_var ( "m" , [] , M_real )
+          , M_var ( "p" , [] , M_real )
+          , M_var ( "i" , [] , M_real )
+          , M_var ( "j" , [] , M_real )
+          , M_var ( "k" , [] , M_real )
+          , M_var ( "ret" , [] , M_bool )
+          ]
+        , [ M_ass ( "n" , [] , M_size ( "a" , 0 ) )
+          , M_ass ( "m" , [] , M_size ( "b" , 0 ) )
+          , M_ass ( "p" , [] , M_size ( "c" , 1 ) )
+          , M_cond
+              ( M_app
+                  ( M_and
+                  , [ M_app
+                        ( M_and
+                        , [ M_app
+                              ( M_eq , [ M_app ( M_fn "n" , [] ) , M_size ( "c" , 0 ) ] )
+                          , M_app ( M_eq , [ M_app ( M_fn "m" , [] ) , M_size ( "a" , 1 ) ] )
+                          ]
+                        )
+                    , M_app ( M_eq , [ M_app ( M_fn "p" , [] ) , M_size ( "b" , 1 ) ] )
+                    ]
+                  )
+              , M_block
+                  ( []
+                  , [ M_ass ( "i" , [] , M_ival 0 )
+                    , M_while
+                        ( M_app
+                            ( M_lt , [ M_app ( M_fn "i" , [] ) , M_app ( M_fn "n" , [] ) ] )
+                        , M_block
+                            ( []
+                            , [ M_ass ( "j" , [] , M_ival 0 )
+                              , M_while
+                                  ( M_app
+                                      ( M_lt
+                                      , [ M_app ( M_fn "j" , [] ) , M_app ( M_fn "p" , [] ) ]
+                                      )
+                                  , M_block
+                                      ( []
+                                      , [ M_ass
+                                            ( "ab"
+                                            , [ M_app ( M_fn "i" , [] ) , M_app ( M_fn "j" , [] ) ]
+                                            , M_rval 0.0
+                                            )
+                                        , M_ass ( "k" , [] , M_ival 0 )
+                                        , M_while
+                                            ( M_app
+                                                ( M_lt
+                                                , [ M_app ( M_fn "k" , [] )
+                                                  , M_app ( M_fn "m" , [] )
+                                                  ]
+                                                )
+                                            , M_block
+                                                ( []
+                                                , [ M_ass
+                                                      ( "ab"
+                                                      , [ M_app ( M_fn "i" , [] )
+                                                        , M_app ( M_fn "j" , [] )
+                                                        ]
+                                                      , M_app
+                                                          ( M_add
+                                                          , [ M_app
+                                                                ( M_fn "ab"
+                                                                , [ M_app ( M_fn "i" , [] )
+                                                                  , M_app ( M_fn "j" , [] )
+                                                                  ]
+                                                                )
+                                                            , M_app
+                                                                ( M_mul
+                                                                , [ M_app
+                                                                      ( M_fn "a"
+                                                                      , [ M_app ( M_fn "i" , [] )
+                                                                        , M_app ( M_fn "k" , [] )
+                                                                        ]
+                                                                      )
+                                                                  , M_app
+                                                                      ( M_fn "b"
+                                                                      , [ M_app ( M_fn "k" , [] )
+                                                                        , M_app ( M_fn "j" , [] )
+                                                                        ]
+                                                                      )
+                                                                  ]
+                                                                )
+                                                            ]
+                                                          )
+                                                      )
+                                                  , M_ass
+                                                      ( "k"
+                                                      , []
+                                                      , M_app
+                                                          ( M_add
+                                                          , [ M_app ( M_fn "k" , [] ) , M_ival 1 ]
+                                                          )
+                                                      )
+                                                  ]
+                                                )
+                                            )
+                                        , M_ass
+                                            ( "j"
+                                            , []
+                                            , M_app
+                                                ( M_add , [ M_app ( M_fn "j" , [] ) , M_ival 1 ] )
+                                            )
+                                        ]
+                                      )
+                                  )
+                              , M_ass
+                                  ( "i"
+                                  , []
+                                  , M_app ( M_add , [ M_app ( M_fn "i" , [] ) , M_ival 1 ] )
+                                  )
+                              ]
+                            )
+                        )
+                    , M_ass ( "i" , [] , M_ival 0 )
+                    , M_while
+                        ( M_app
+                            ( M_lt , [ M_app ( M_fn "i" , [] ) , M_app ( M_fn "n" , [] ) ] )
+                        , M_block
+                            ( []
+                            , [ M_ass ( "j" , [] , M_ival 0 )
+                              , M_while
+                                  ( M_app
+                                      ( M_lt
+                                      , [ M_app ( M_fn "j" , [] ) , M_app ( M_fn "p" , [] ) ]
+                                      )
+                                  , M_block
+                                      ( []
+                                      , [ M_ass
+                                            ( "c"
+                                            , [ M_app ( M_fn "i" , [] ) , M_app ( M_fn "j" , [] ) ]
+                                            , M_app
+                                                ( M_fn "ab"
+                                                , [ M_app ( M_fn "i" , [] )
+                                                  , M_app ( M_fn "j" , [] )
+                                                  ]
+                                                )
+                                            )
+                                        , M_ass
+                                            ( "j"
+                                            , []
+                                            , M_app
+                                                ( M_add , [ M_app ( M_fn "j" , [] ) , M_ival 1 ] )
+                                            )
+                                        ]
+                                      )
+                                  )
+                              , M_ass
+                                  ( "i"
+                                  , []
+                                  , M_app ( M_add , [ M_app ( M_fn "i" , [] ) , M_ival 1 ] )
+                                  )
+                              ]
+                            )
+                        )
+                    , M_ass ( "ret" , [] , M_bval True )
+                    ]
+                  )
+              , M_ass ( "ret" , [] , M_bval False )
+              )
+          , M_return (M_app ( M_fn "ret" , [] ))
+          ]
+        )
+    , M_fun
+        ( "read_matrix"
+        , [ ( "a" , 2 , M_real ) ]
+        , M_bool
+        , [ M_var ( "i" , [] , M_real ) , M_var ( "j" , [] , M_real ) ]
+        , [ M_ass ( "i" , [] , M_ival 0 )
+          , M_while
+              ( M_app ( M_lt , [ M_app ( M_fn "i" , [] ) , M_size ( "a" , 1 ) ] )
+              , M_block
+                  ( []
+                  , [ M_ass ( "j" , [] , M_ival 0 )
+                    , M_while
+                        ( M_app ( M_lt , [ M_app ( M_fn "j" , [] ) , M_size ( "a" , 1 ) ] )
+                        , M_block
+                            ( []
+                            , [ M_read
+                                  ( "a" , [ M_app ( M_fn "i" , [] ) , M_app ( M_fn "j" , [] ) ] )
+                              , M_ass
+                                  ( "j"
+                                  , []
+                                  , M_app ( M_add , [ M_app ( M_fn "j" , [] ) , M_ival 1 ] )
+                                  )
+                              ]
+                            )
+                        )
+                    , M_ass
+                        ( "i"
+                        , []
+                        , M_app ( M_add , [ M_app ( M_fn "i" , [] ) , M_ival 1 ] )
+                        )
+                    ]
+                  )
+              )
+          , M_return (M_bval True)
+          ]
+        )
+    , M_fun
+        ( "write_matrix"
+        , [ ( "a" , 2 , M_real ) ]
+        , M_bool
+        , [ M_var ( "i" , [] , M_real ) , M_var ( "j" , [] , M_real ) ]
+        , [ M_ass ( "i" , [] , M_ival 0 )
+          , M_while
+              ( M_app ( M_lt , [ M_app ( M_fn "i" , [] ) , M_size ( "a" , 1 ) ] )
+              , M_block
+                  ( []
+                  , [ M_ass ( "j" , [] , M_ival 0 )
+                    , M_while
+                        ( M_app ( M_lt , [ M_app ( M_fn "j" , [] ) , M_size ( "a" , 1 ) ] )
+                        , M_block
+                            ( []
+                            , [ M_print
+                                  (M_app
+                                     ( M_fn "a"
+                                     , [ M_app ( M_fn "i" , [] ) , M_app ( M_fn "j" , [] ) ]
+                                     ))
+                              , M_ass
+                                  ( "j"
+                                  , []
+                                  , M_app ( M_add , [ M_app ( M_fn "j" , [] ) , M_ival 1 ] )
+                                  )
+                              ]
+                            )
+                        )
+                    , M_ass
+                        ( "i"
+                        , []
+                        , M_app ( M_add , [ M_app ( M_fn "i" , [] ) , M_ival 1 ] )
+                        )
+                    ]
+                  )
+              )
+          , M_return (M_bval True)
+          ]
+        )
+    , M_var ( "X" , [ M_ival 2 , M_ival 2 ] , M_real )
+    ]
+  , [ M_cond
+        ( M_app ( M_fn "read_matrix" , [ M_app ( M_fn "X" , [] ) ] )
+        , M_cond
+            ( M_app
+                ( M_fn "mult_matrix"
+                , [ M_app ( M_fn "X" , [] )
+                  , M_app ( M_fn "X" , [] )
+                  , M_app ( M_fn "X" , [] )
+                  ]
+                )
+            , M_cond
+                ( M_app ( M_fn "write_matrix" , [ M_app ( M_fn "X" , [] ) ] )
+                , M_block ( [] , [] )
+                , M_block ( [] , [] )
+                )
+            , M_block ( [] , [] )
+            )
+        , M_block ( [] , [] )
+        )
+    ]
+  )
+TESTING TEST 20: 
+M_Prog
+  ( [ M_fun
+        ( "sum_list"
+        , [ ( "N" , 0 , M_real ) ]
+        , M_real
+        , [ M_var ( "X" , [ M_app ( M_fn "N" , [] ) ] , M_real )
+          , M_fun
+              ( "read_list"
+              , [ ( "X" , 1 , M_real ) ]
+              , M_bool
+              , [ M_var ( "i" , [] , M_real ) ]
+              , [ M_ass ( "i" , [] , M_ival 0 )
+                , M_while
+                    ( M_app ( M_lt , [ M_app ( M_fn "i" , [] ) , M_size ( "X" , 0 ) ] )
+                    , M_block
+                        ( []
+                        , [ M_read ( "X" , [ M_app ( M_fn "i" , [] ) ] )
+                          , M_ass
+                              ( "i"
+                              , []
+                              , M_app ( M_add , [ M_app ( M_fn "i" , [] ) , M_ival 1 ] )
+                              )
+                          ]
+                        )
+                    )
+                , M_return (M_bval True)
+                ]
+              )
+          , M_fun
+              ( "sum_list"
+              , [ ( "X" , 1 , M_real ) ]
+              , M_real
+              , [ M_var ( "i" , [] , M_real ) , M_var ( "sum" , [] , M_real ) ]
+              , [ M_ass ( "i" , [] , M_ival 0 )
+                , M_ass ( "sum" , [] , M_rval 0.0 )
+                , M_while
+                    ( M_app ( M_lt , [ M_app ( M_fn "i" , [] ) , M_size ( "X" , 0 ) ] )
+                    , M_block
+                        ( []
+                        , [ M_ass
+                              ( "sum"
+                              , []
+                              , M_app
+                                  ( M_add
+                                  , [ M_app ( M_fn "sum" , [] )
+                                    , M_app ( M_fn "X" , [ M_app ( M_fn "i" , [] ) ] )
+                                    ]
+                                  )
+                              )
+                          , M_ass
+                              ( "i"
+                              , []
+                              , M_app ( M_add , [ M_app ( M_fn "i" , [] ) , M_ival 1 ] )
+                              )
+                          ]
+                        )
+                    )
+                , M_return (M_app ( M_fn "sum" , [] ))
+                ]
+              )
+          , M_var ( "x" , [] , M_real )
+          ]
+        , [ M_print
+              (M_app ( M_fn "read_list" , [ M_app ( M_fn "X" , [] ) ] ))
+          , M_return
+              (M_app ( M_fn "sum_list" , [ M_app ( M_fn "X" , [] ) ] ))
+          ]
+        )
+    , M_var ( "M" , [] , M_real )
+    ]
+  , [ M_read ( "M" , [] )
+    , M_print (M_app ( M_fn "sum_list" , [ M_app ( M_fn "M" , [] ) ] ))
+    ]
+  )

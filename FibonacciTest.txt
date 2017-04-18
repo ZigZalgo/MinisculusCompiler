@@ -1,0 +1,14 @@
+fun FIB(n[]:real,m[]:real):real
+{ var ans:real;
+  var NONE:real;
+  var NTWO:real;
+	begin
+		NONE := FIB(n - 1);
+		NTWO := FIB(n - 2);
+		ans := NONE + NTWO;
+		return ans;
+	end
+}
+begin
+print FIB(5)
+end

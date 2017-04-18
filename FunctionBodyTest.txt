@@ -1,0 +1,10 @@
+fun MAX(n[]:real,m[]:real):real
+{ var ans:real;
+	begin
+		if n<=m then ans := m
+		else ans := n
+		return ans;
+	end
+}
+begin
+end

@@ -1,0 +1,93 @@
+comment "%";
+comment "/*" "*/";
+
+PROG.	Prog ::= Block;
+
+BLOCK.	Block ::= [Declaration] Program_body;
+separator Declaration ";";
+
+DECVAR.	Declaration ::= Var_declaration;
+DECFUN.	Declaration ::= Fun_declaration;
+
+VARDEC.	Var_declaration ::= "var" Ident Array_dimensions ":" Type;
+
+TVAR.	Type ::= "var";
+TREAL.	Type ::= "real"; 
+TBOOL.	Type ::= "bool" ;
+
+ADIM.	Array_dimensions ::= "[" Expr "]" Array_dimensions;
+ADIMNULL.	Array_dimensions ::= ;
+
+FUNDEC.	Fun_declaration ::= "fun" Ident Param_list ":" Type "{" Fun_block "}";
+
+FUNBLOCK.	Fun_block ::= [Declaration] Fun_body; 
+
+PLIST.	Param_list ::= "(" [Basic_declaration] ")";
+separator Basic_declaration ",";
+
+
+BASICDECL.	Basic_declaration ::= Ident Basic_array_dimensions ":" Type;
+
+BASICADIM.	Basic_array_dimensions ::= "[" "]" Basic_array_dimensions; 
+BASICADIMNULL.	Basic_array_dimensions ::= ;
+
+PBODY.	Program_body ::= "begin" [Prog_stmt] "end";
+
+FBODY.	Fun_body ::= "begin" [Prog_stmt] "return" Expr ";" "end";
+separator Prog_stmt ";";
+
+IFTHENELSE.	Prog_stmt ::= "if" Expr "then" Prog_stmt "else" Prog_stmt; 
+WHILE.	Prog_stmt ::= "while" Expr "do" Prog_stmt;
+READ.	Prog_stmt ::= "read" Identifier;
+ASSIGN.	Prog_stmt ::= Identifier ":=" Expr;
+PRINT.	Prog_stmt ::= "print" Expr;
+BLOCKSTMT.	Prog_stmt ::= "{" Block "}";
+
+EIDENT.	Identifier ::= Ident Array_dimensions;
+
+OR.	Expr ::= Expr "||" Bint_term; 
+EXPR.	Expr ::= Bint_term;
+
+AND.	Bint_term ::= Bint_term "&&" Bint_factor; 
+BINTERM.	Bint_term ::= Bint_factor;
+
+NOT.	Bint_factor ::= "not" Bint_factor; 
+COMP.	Bint_factor ::= Int_expr Compare_op Int_expr;
+BINTFACTOR.	Bint_factor ::= Int_expr;
+
+EQUALS.	Compare_op ::= "="; 
+LESST.	Compare_op ::= "<"; 
+GREATT.	Compare_op ::= ">"; 
+LTE.	Compare_op ::= "<="; 
+GTE.	Compare_op ::= ">=";
+
+IEXPRTOADDOP.	Int_expr ::= Int_expr Addop Int_term; 
+INTEXPR.	Int_expr ::= Int_term;
+
+ADD. Addop ::= "+";
+SUB. Addop ::= "-";
+
+ITERMTOMULOP.	Int_term ::= Int_term Mulop Int_factor;
+INTERM.	Int_term ::= Int_factor;
+
+MUL.	Mulop ::= "*"; 
+DIV.	Mulop ::= "/";
+
+IFEXPR.	Int_factor ::= "(" Expr ")"; 
+SIZE.	Int_factor ::= "size" "(" Ident Basic_array_dimensions ")"; 
+FLOAT.	Int_factor ::= "float" "(" Expr ")"; 
+FLOOR.	Int_factor ::= "floor" "(" Expr ")";
+CEIL.	Int_factor ::= "ceil" "(" Expr ")"; 
+INTFACTORMODLIST.	Int_factor ::= Ident Modifier_list; 
+INTEGER.	Int_factor ::= Integer; 
+DBL.	Int_factor ::= Double; 
+FALSE.	Int_factor ::= "false"; 
+TRUE.	Int_factor ::= "true"; 
+MINUS.	Int_factor ::= "-" Int_factor;
+
+MODIFIERARGS.	Modifier_list ::= "(" [Expr] ")";
+MODIFIERLIST.	Modifier_list ::= Array_dimensions;
+
+separator Expr ",";
+
+

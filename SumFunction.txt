@@ -1,0 +1,15 @@
+fun SUM(a[]:real):real
+{ var i:real;
+  var sum:real;
+	begin
+	sum	:= 0;
+	i := 0;
+	while i < size(a) do
+		sum := sum + a[i];
+		i := i + 1;
+	return sum;
+	end
+}
+begin
+	print SUM(3)
+end
