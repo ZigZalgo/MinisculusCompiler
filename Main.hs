@@ -7,6 +7,7 @@ import ASTConverter
 import AbsMinisculus
 import System.Environment
 import ErrM
+import ProgHandle
 import qualified Text.Show.Pretty as Pretty
 
 main = do
@@ -20,5 +21,6 @@ main = do
 		Ok rpTree -> do 
 			let 
 			   ast = transProg rpTree
-			putStrLn $ Pretty.ppShow ast
+			   ir = handleM_Prog ast
+			putStrLn $ Pretty.ppShow ir
 		Bad s -> error $ "Eror in parsing: " ++ s 

@@ -53,7 +53,7 @@ transVar_declaration x = case x of
     let str = transIdent id
         m_exprs = transArray_dimensions array_dimensions
         m_type = transType newType
-    in A.M_var (str, m_exprs, m_type)
+    in A.M_var (str, m_type)
 
 
 ----TYPE TRANSFORMATION----

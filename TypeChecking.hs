@@ -2,6 +2,8 @@ module TypeChecking where
 import SymbolTypes
 import SymbolTableFunctions
 import IntermediateRepresentation
+import AST
+{-
 ------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------
 ---------------------DECLARATION TYPE CHECKING--------------------------------------
@@ -62,77 +64,104 @@ typeCheckArgs (fArgs:restF) (lArgs:restL) =
 typeCheckArgs:: (String, Int, M_type) -> (M_type, Int) -> Bool
 typeCheckArgs (_,_,fType) (lType, _) = (ftype == lType)
 
-
+-}
 ------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------
 ---------------------STATEMENT TYPE CHECKING----------------------------------------
 ------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------
-typeCheckStatements::[M_stmt] -> Bool
+typeCheckStatements::[M_stmt] -> ST -> Bool
 typeCheckStatements [] _ = True
-typeCheckStatements (statement:rest) =
-    case typeCheckStatement statement of
-        True -> typeCheckStatements rest
+typeCheckStatements (statement:rest) table =
+    case typeCheckStatement statement table of
+        True -> typeCheckStatements rest table
         False -> False
 
 --Type checks individual statements
-typeCheckStatement:: M_stmt -> Bool
+typeCheckStatement:: M_stmt -> ST -> Bool
 --If the statement is an assignment, type check the expressions
-typeCheckStatement (M_ass (name, exprs, expr)) = let
-    exprChecked = typeCheckExpression expr
-    exprsChecked = typeCheckExpressions exprs
-    in and (exprChecked : exprsChecked : [])
+typeCheckStatement (M_ass (name, expr)) table = 
+    case symIDesc of
+        I_VARIABLE (level, offset, vType) -> (vType == exprType)
+        _ -> error "Cannot assign type "++exprTyp++" to variable "++name++" of type "++vType
+    where
+        symIDesc = lookup table name
+        exprType = typeCheckExpression table expr
+
 --If the statement is a while loop, type check the conditional, and the statements
-typeCheckStatement (M_while (expr, stmt)) = let
-    exprChecked = typeCheckExpression expr
-    stmtChecked = typeCheckStatement stmt
-    in and (exprChecked:stmtChecked:[])
+typeCheckStatement (M_while (expr, stmt)) table =
+    case exprType of 
+        M_bval bool -> stmtChecked
+        _ -> error "expression "++expr++" is not a boolean expression"
+    where 
+        exprType = typeCheckExpression table expr
+        stmtChecked = typeCheckStatement stmt table
+
 --If the statement is an if else, type check the conditional, and the statements
-typeCheckStatement (M_cond (expr, stmt1, stmt2)) = let
-    exprChecked = typeCheckExpression expr
-    st1Checked = typeCheckStatement stmt1
-    st2Checked = typeCheckStatement stmt2
-    in and (exprChecked:st1Checked:st2Checked:[])
+typeCheckStatement (M_cond (expr, stmt1, stmt2)) table =
+    case exprType of
+        M_val bool -> and (st1checked:st2checked:[])
+        _ -> error "expression "++expr++" is not a boolean expression"
+    where
+        exprType = typeCheckExpression table expr
+        st1Checked = typeCheckStatement stmt1 table
+        st2Checked = typeCheckStatement stmt2 table
+
 --If the statement is a read, type check the expressions
-typeCheckStatement (M_read (name, exprs)) = typeCheckExpressions exprs
---If the statement is a print, type check the expression
-typeCheckStatement (M_print expr) = typeCheckExpression expr
---If the statement is a return call, type check the returned expression
-typeCheckStatement (M_return expr) = typeCheckExpression expr
---If the statement is a block, recursively check the statements, and check the declarations
-typeCheckStatement (M_block (decls, stmts)) = let
-    declsChecked = typeCheckDeclarations decls
-    stmtsChecked = typeCheckStatements stmts
-    in and (declsChecked:stmtsChecked:[])
+typeCheckStatement (M_read (name, expr)) table = 
+    case symIDesc of
+        I_VARIABLE (level, offset, vType) -> (vType == exprType)
+        _ -> error "Variable "++name++" is not of type "++exprType
+    where
+        symIDesc = lookup table name
+        exprType = typeCheckExpression table expr
+
+--Just gotta make sure the expressions are type consistent
+typeCheckStatement (M_print (expr)) table = 
+    case typeCheckExpression table expr of
+        _ -> True
+typeCheckStatement (M_return (expr)) table =
+    case typeCheckExpression table expr of
+        _ -> True
+
+--If the statement is a block, recursively check the statement
+typeCheckStatement (M_block (decls, stmts)) table = typeCheckStatements stmts table
+
+typeCheckStatement _ _= True
 
 ------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------
 ---------------------EXPRESSION TYPE CHECKING---------------------------------------
 ------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------
-
---Checking expressions done recursively
-typeCheckExpressions:: [M_expr] -> ST -> Bool
-typeCheckExpressions [] _ = True
-typeCheckExpressions (expr:rest) =
-        case typeCheckExpression expr of
-            True -> typeCheckExpressions rest
-            False -> False
+typeCheckExpressions::ST -> [M_expr] -> M_type
+typeCheckExpressions table [] = error "This should not happen"
+typeCheckExpressions table exprs = 
+    case checkListType typeList of
+        true -> typeList !! 0
+        false -> error "Types in the expression list "++exprs++" do not match"
+    where typeList = (map (typeCheckExpression table) exprs)
 
 --Type checks individual expressions
-typeCheckExpression:: M_expr -> Bool
-typeCheckExpression (M_id (name, exprs)) = typeCheckExpressions exprs
-typeCheckExpression (M_app (opn, (expr:exprs)) = 
-        case checkListType (expr:rest) of --If all the expressions are the same constructor
-            False -> False
-            --Make sure this opn can be used on this type
-            True -> checkOPType opn expr
-typeCheckExpression _ = True
+typeCheckExpression:: ST -> M_expr -> M_type
+typeCheckExpression table (M_ival int) = M_int
+typeCheckExpression table (M_rval flt) = M_real
+typeCheckExpression table (M_bval bool) = M_bool
+typeCheckExpression table (M_id name) = 
+    case symIDesc of
+        I_VARIABLE _ -> error "Cannot call variable "++name++" like a function"
+        I_FUNCTION (-> 
+    where symIDesc = lookup table name
+typeCheckExpression table (M_app (opn, exprList)) =
+    case checkOpType opn esType of
+        True -> esType
+        False -> error "Operation "++opn++" cannot be applied to type "+esType
+    where esType = typeCheckExpressions exprList
 
 --Compares a constructor with an Operation and checks whether that 
 --operation can be used on the constructor
 checkOPType:: M_operation -> M_expr -> Bool
-checkOPType M_add M_ival = True
+checkOPType M_add M_ival = 
 checkOPType M_add M_rval = True
 checkOPType M_mul M_ival = True
 checkOPType M_mul M_rval = True
@@ -157,11 +186,12 @@ checkOPType M_or M_bval = True
 checkOPType M_float M_rval = True
 checkOPType M_floor M_rval = True
 checkOPType M_ceil M_rval = True
+checkOPType (M_fn str) (M_id str2)  = True
 checkOPType _ _ = False
 
 
 --Takes a list of expressions, and makes sure they all share the same constructor
-checkListType::[M_expr] -> Bool
+checkListType::[M_type] -> Bool
 checkListType [] = True
 checkListType struct1:[] = True
 checkListType struc1:struc2:rest = 
@@ -170,8 +200,8 @@ checkListType struc1:struc2:rest =
         True -> checkListType (struct2:rest)
 
 --Compares two expressions, and matches constructor type
-sameConstructor::M_expr -> M_expr -> Bool
-sameConstructor (M_ival _) (M_ival _) = True
-sameConstructor (M_rval _) (M_rval _) = True
-sameConstructor (M_bval _) (M_bval _) = True
+sameConstructor::M_type -> M_type -> Bool
+sameConstructor (M_int) (M_int) = True
+sameConstructor (M_real) (M_real) = True
+sameConstructor (M_bool) (M_bool) = True
 sameConstructor _ _ = False

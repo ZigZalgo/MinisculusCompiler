@@ -15,7 +15,6 @@ lookup::ST -> String -> Either String SYM_I_DESC =
       find_level ((str,v):rest)|x == str = Just v
                                |otherwise =  find_level rest
       find_level [] = Nothing
-
       find n [] = Left ("Could not find "++ str)
       find n (Symbol_table(_,_,vs)::rest) = 
              (case find_level vs of 
@@ -37,9 +36,8 @@ insert:: Int -> ST -> SYM_DESC -> (Int,ST) =
   insert n ((Symbol_table(nL,nA,sL)):rest) FUNCTION (str,Ts,T)
            | in_index_list str sL 
            = error ("Symbol table error: "++str++"is already defined.")
-           | otherwise = (n+1,(Symbol_table(nL,nA,(str,Fun_attr(getlabel n "fn",Ts,T)):sL)
-                              ):rest)
-  ....
+           | otherwise = (n+1,
+              (Symbol_table(nL,nA,(str,Fun_attr(getlabel n "fn",Ts,T)):sL)):rest)
     where in_index_list str [] = False
               in_index_list str ((x,_):xs)| str==x = True
                                           | otherwise = in_index_list str xs

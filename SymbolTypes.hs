@@ -1,7 +1,6 @@
 module SymbolTypes where
 
 data SYM_DESC = 
-      ARGUMENT (String,M_type,Int)
     | VARIABLE (String,M_type,Int)
     | FUNCTION (String,[(M_type,Int)],M_type)
 
